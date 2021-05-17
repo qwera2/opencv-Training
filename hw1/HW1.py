@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[52]:
+# In[16]:
 
 
 import cv2
@@ -12,7 +12,7 @@ import matplotlib.colors as clr
 img = cv2.imread('C:/Users/user/Documents/image_process_project/HW1/Bird feeding 3 low contrast.tif')
 
 
-# In[53]:
+# In[17]:
 
 
 # if img is not None:
@@ -28,28 +28,32 @@ img = cv2.imread('C:/Users/user/Documents/image_process_project/HW1/Bird feeding
 #     print('image file is not found')
 
 
-# In[54]:
+# In[18]:
 
 
 inputValue=[]
+arctanValue=[]
+fcn={}
 for num in range(0,256,1):
     inputValue.append(num)
-outputValue=[]
-fcn={}
-for num in inputValue:
-    outputNum=num+97
-    if(outputNum>255):
-        outputNum-=256
-    outputValue.append(outputNum)
-#     fcn[num]=outputNum
 
+for num in inputValue:
+    arctanNum=np.arctan((num-128)/32)    
+#     outputNum=num+97
+#     if(outputNum>255):
+#         outputNum-=256
+    arctanValue.append(arctanNum)
+#     fcn[num]=outputNum
+y_shift=-min(arctanValue)
+slope=( 255-0 )/( max(arctanValue)-min(arctanValue) )
 
 for i in range(0,256,1):
-    fcn[inputValue[i]]=outputValue[i]
+    outputNum=round(slope*(arctanValue[i]+y_shift))
+    fcn[inputValue[i]]=outputNum
 # print(fcn)
 
 
-# In[55]:
+# In[19]:
 
 
 outImg=img.copy()
@@ -62,7 +66,7 @@ for y in range(row):
         outImg[y,x,2]=fcn[img[y,x,2]]
 
 
-# In[56]:
+# In[ ]:
 
 
 if img is not None:
